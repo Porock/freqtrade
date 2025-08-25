@@ -60,6 +60,202 @@ logger = logging.getLogger(__name__)
 logger.debug("Included module rpc.telegram ...")
 
 
+# Minimal localization support for Telegram messages
+TRANSLATIONS: dict[str, dict[str, str]] = {
+    "ru": {
+        # Generic
+        "Status:": "Статус:",
+        "ERROR:": "ОШИБКА:",
+        "Warning:": "Внимание:",
+        "Cancel": "Отмена",
+        "Refresh": "Обновить",
+        "Updated:": "Обновлено:",
+        "Which trade?": "Какую сделку?",
+        "Which pair?": "Какую пару?",
+        "No trades yet.": "Сделок пока нет.",
+        "N/A": "Н/Д",
+        "Yes": "Да",
+        "No": "Нет",
+        # Balance
+        "Simulated balances in Dry Mode.": "Симулированные балансы в режиме Dry Run.",
+        "Starting capital:": "Начальный капитал:",
+        "Estimated Value": "Оценочная стоимость",
+        " (Bot managed assets only)": " (только активы под управлением бота)",
+        "Currency": "валюта",
+        "Currencies": "валюты",
+        # Force exit / enter
+        "Trade-id not set.": "Не указан идентификатор сделки.",
+        "No open trade found.": "Открытых сделок не найдено.",
+        "Force exit canceled.": "Принудительный выход отменен.",
+        "Manually exiting Trade #{trade_id}, {pair}": "Ручной выход из сделки #{trade_id}, {pair}",
+        "Trade {trade_id} not found.": "Сделка {trade_id} не найдена.",
+        "Force enter canceled.": "Принудительный вход отменен.",
+        "Manually entering {side} for {pair}": "Ручной вход {side} по паре {pair}",
+        # Performance
+        "Performance:": "Производительность:",
+        "Entry Tag Performance:": "Эффективность меток входа:",
+        "Exit Reason Performance:": "Эффективность причин выхода:",
+        "Exit Reason": "Причина выхода",
+        "Exits": "Выходы",
+        "Wins": "Победы",
+        "Losses": "Поражения",
+        "Avg. Duration": "Средняя длительность",
+        "Close Date": "Дата закрытия",
+        "Pair (ID L/S)": "Пара (ID Д/Ш)",
+        "Pair (ID)": "Пара (ID)",
+        "recent trades": "последних сделок",
+        # Misc
+        "Please make sure to take care of this asset on the exchange manually.": "Пожалуйста, позаботьтесь об этом активе на бирже вручную.",
+        "Open order canceled.": "Открытый ордер отменен.",
+        "Order List for Trade #": "Список ордеров для сделки #",
+        "continued": "продолжение",
+        # Entry/Exit messages
+        "New Trade": "Новая сделка",
+        "New Trade filled": "Новая сделка исполнена",
+        "Increasing position": "Увеличение позиции",
+        "Position increase filled": "Увеличение позиции исполнено",
+        "Pair:": "Пара:",
+        "Enter Tag:": "Метка входа:",
+        "Amount:": "Количество:",
+        "Direction:": "Направление:",
+        "Open Rate:": "Цена открытия:",
+        "Current Rate:": "Текущая цена:",
+        "Total:": "Итого:",
+        "New Total:": "Новое итого:",
+        "Exited": "Выход выполнен",
+        "Exiting": "Выход",
+        "Partially exiting": "Частичный выход",
+        "Final Profit:": "Итоговая прибыль:",
+        "Cumulative Profit:": "Суммарная прибыль:",
+        "Exit Rate:": "Цена выхода:",
+        "Remaining:": "Остаток:",
+        "Duration:": "Длительность:",
+        "min": "мин",
+        "Unrealized ": "Нереализованная ",
+        "Profit": "прибыль",
+        # Status messages
+        "Trade ID:": "ID сделки:",
+        "Current Pair:": "Текущая пара:",
+        "Short": "Шорт",
+        "Long": "Лонг",
+        "Total invested:": "Всего инвестировано:",
+        "Number of Entries:": "Число входов:",
+        "Number of Exits:": "Число выходов:",
+        "Open Rate:": "Цена открытия:",
+        "Close Rate:": "Цена закрытия:",
+        "Open Date:": "Дата открытия:",
+        "Close Date:": "Дата закрытия:",
+        "Unrealized Profit:": "Нереализованная прибыль:",
+        "Close Profit: ": "Прибыль закрытия: ",
+        "Realized Profit:": "Реализованная прибыль:",
+        "Total Profit:": "Совокупная прибыль:",
+        "Initial Stoploss:": "Начальный стоп-лосс:",
+        "Stoploss:": "Стоп-лосс:",
+        "Stoploss distance:": "Расстояние до стоп-лосса:",
+        "Open Order:": "Открытый ордер:",
+        # Count
+        "current": "текущие",
+        "max": "макс",
+        "total stake": "всего стейк",
+        # Locks
+        "No active locks.": "Нет активных блокировок.",
+        "ID": "ID",
+        "Pair": "Пара",
+        "Until": "До",
+        "Reason": "Причина",
+        # Whitelist / Blacklist
+        "Using whitelist": "Используется вайтлист",
+        "with {n} pairs": "с количеством пар: {n}",
+        "Blacklist contains {n} pairs": "Блэклист содержит {n} пар",
+        "Error:": "Ошибка:",
+        # Health/Version
+        "Last process:": "Последний процесс:",
+        "Initial bot start:": "Первый запуск бота:",
+        "Last bot restart:": "Последняя перезагрузка бота:",
+        "Version:": "Версия:",
+        "Strategy version:": "Версия стратегии:",
+        # Show config
+        "Initial Stoploss:": "Начальный стоп-лосс:",
+        "Trailing stop positive:": "Порог трейлинг-стопа:",
+        "Trailing stop offset:": "Смещение трейлинг-стопа:",
+        "Only trail above offset:": "Трейлинг только выше смещения:",
+        "Position adjustment:": "Доливка позиции:",
+        "On": "Вкл",
+        "Off": "Выкл",
+        "Mode:": "Режим:",
+        "Dry-run": "Dry-run",
+        "Live": "Лайв",
+        "Exchange:": "Биржа:",
+        "Market:": "Рынок:",
+        "Stake per trade:": "Стейк на сделку:",
+        "Max open Trades:": "Макс. открытых сделок:",
+        "Minimum ROI:": "Мин. ROI:",
+        "Entry strategy:": "Стратегия входа:",
+        "Exit strategy:": "Стратегия выхода:",
+        "Timeframe:": "Таймфрейм:",
+        "Strategy:": "Стратегия:",
+        "Current state:": "Текущее состояние:",
+        # Update helpers
+        "Successfully updated market direction": "Успешно обновлено направление рынка",
+        "from": "с",
+        "to": "на",
+        "Invalid market direction provided.": "Указано неверное направление рынка.",
+        "Valid market directions: *long, short, even, none*": "Допустимые направления: *long, short, even, none*",
+        "Currently set market direction:": "Текущее направление рынка:",
+        "Invalid usage of command /marketdir.": "Неверное использование команды /marketdir.",
+        "Usage: */marketdir [short |  long | even | none]*": "Использование: */marketdir [short | long | even | none]*",
+        # Help sections
+        "Bot Control": "Управление ботом",
+        "Current state": "Текущее состояние",
+        "Statistics": "Статистика",
+        # Help command lines
+        "/start: Starts the trader": "/start: Запускает трейдера",
+        "/pause: Pause the new entries for trader, but handles open trades gracefully": "/pause: Приостанавливает новые входы, открытые позиции обрабатываются штатно",
+        "/stop: Stops the trader": "/stop: Останавливает трейдера",
+        "/stopentry: Stops entering, but handles open trades gracefully": "/stopentry: Запрещает новые входы, открытые позиции обрабатываются штатно",
+        "/forceexit <trade_id>|all: Instantly exits the given trade or all trades, regardless of profit": "/forceexit <trade_id>|all: Немедленно закрывает указанную/все сделки, независимо от профита",
+        "/fx <trade_id>|all: Alias to /forceexit": "/fx <trade_id>|all: Алиас к /forceexit",
+        "/forcelong <pair> [<rate>]: Instantly buys the given pair. Optionally takes a rate at which to buy (only applies to limit orders).": "/forcelong <pair> [<rate>]: Немедленно покупает указанную пару. Можно указать цену (для лимитных ордеров).",
+        "/forceshort <pair> [<rate>]: Instantly shorts the given pair. Optionally takes a rate at which to sell (only applies to limit orders).": "/forceshort <pair> [<rate>]: Немедленно шортит указанную пару. Можно указать цену (для лимитных ордеров).",
+        "/delete <trade_id>: Instantly delete the given trade in the database": "/delete <trade_id>: Немедленно удаляет указанную сделку из БД",
+        "/reload_trade <trade_id>: Reload trade from exchange Orders": "/reload_trade <trade_id>: Перезагружает сделку из ордеров биржи",
+        "/cancel_open_order <trade_id>: Cancels open orders for trade. Only valid when the trade has open orders.": "/cancel_open_order <trade_id>: Отменяет открытые ордера для сделки. Доступно только при наличии открытых ордеров.",
+        "/coo <trade_id>|all: Alias to /cancel_open_order": "/coo <trade_id>|all: Алиас к /cancel_open_order",
+        "/whitelist [sorted] [baseonly]: Show current whitelist. Optionally in order and/or only displaying the base currency of each pairing.": "/whitelist [sorted] [baseonly]: Показ текущего вайтлиста. Опционально — сортировка и/или только базовые валюты.",
+        "/blacklist [pair]: Show current blacklist, or adds one or more pairs to the blacklist.": "/blacklist [pair]: Показ текущего блэклиста или добавление пары(пар) в блэклист.",
+        "/blacklist_delete [pairs]| /bl_delete [pairs]: Delete pair / pattern from blacklist. Will reset on reload_conf.": "/blacklist_delete [pairs]| /bl_delete [pairs]: Удаляет пару/шаблон из блэклиста. Сбросится при reload_conf.",
+        "/reload_config: Reload configuration file": "/reload_config: Перезагрузка конфигурации",
+        "/unlock <pair|id>: Unlock this Pair (or this lock id if it's numeric)": "/unlock <pair|id>: Разблокировать пару (или блокировку по id)",
+        "/show_config: Show running configuration": "/show_config: Показ текущей конфигурации",
+        "/locks: Show currently locked pairs": "/locks: Показ текущих блокировок",
+        "/balance: Show bot managed balance per currency": "/balance: Балансы под управлением бота по валютам",
+        "/balance total: Show account balance per currency": "/balance total: Баланс аккаунта по валютам",
+        "/logs [limit]: Show latest logs - defaults to 10": "/logs [limit]: Показ последних логов (по умолчанию 10)",
+        "/count: Show number of active trades compared to allowed number of trades": "/count: Показ числа активных сделок и лимита",
+        "/health Show latest process timestamp - defaults to 1970-01-01 00:00:00": "/health: Показ метки времени последнего процесса",
+        "/marketdir [long | short | even | none]: Updates the user managed variable that represents the current market direction. If no direction is provided the currently set market direction will be output.": "/marketdir [long | short | even | none]: Обновляет пользовательское направление рынка. Без аргумента — вывод текущего значения.",
+        "/list_custom_data <trade_id> <key>: List custom_data for Trade ID & Key combo. If no Key is supplied it will list all key-value pairs found for that Trade ID.": "/list_custom_data <trade_id> <key>: Показ custom_data по сделке и ключу. Без ключа — все пары ключ/значение по сделке.",
+        "/status <trade_id>|[table]: Lists all open trades": "/status <trade_id>|[table]: Список всех открытых сделок",
+        "<trade_id> : Lists one or more specific trades.                        Separate multiple <trade_id> with a blank space.": "<trade_id> : Показ одной или нескольких сделок. Несколько id разделяются пробелом.",
+        "table : will display trades in a table                pending buy orders are marked with an asterisk (*)                pending sell orders are marked with a double asterisk (**)": "table : показ в виде таблицы. Ожидающие покупки помечены *, продажи — **",
+        "/entries <pair|none>: Shows the enter_tag performance": "/entries <pair|none>: Эффективность меток входа",
+        "/exits <pair|none>: Shows the exit reason performance": "/exits <pair|none>: Эффективность причин выхода",
+        "/mix_tags <pair|none>: Shows combined entry tag + exit reason performance": "/mix_tags <pair|none>: Комбинированная эффективность меток входа и причин выхода",
+        "/trades [limit]: Lists last closed trades (limited to 10 by default)": "/trades [limit]: Последние закрытые сделки (по умолчанию 10)",
+        "/profit [<n>]: Lists cumulative profit from all finished trades, over the last n days": "/profit [<n>]: Совокупная прибыль по всем завершенным сделкам за последние n дней",
+        "/profit_long [<n>]: Lists cumulative profit from all finished long trades, over the last n days": "/profit_long [<n>]: Совокупная прибыль по лонгам за последние n дней",
+        "/profit_short [<n>]: Lists cumulative profit from all finished short trades, over the last n days": "/profit_short [<n>]: Совокупная прибыль по шортам за последние n дней",
+        "/performance: Show performance of each finished trade grouped by pair": "/performance: Результаты завершённых сделок по парам",
+        "/daily <n>: Shows profit or loss per day, over the last n days": "/daily <n>: Прибыль/убыток по дням за последние n дней",
+        "/weekly <n>: Shows statistics per week, over the last n weeks": "/weekly <n>: Статистика по неделям за последние n недель",
+        "/monthly <n>: Shows statistics per month, over the last n months": "/monthly <n>: Статистика по месяцам за последние n месяцев",
+        "/stats: Shows Wins / losses by Sell reason as well as Avg. holding durations for buys and sells.": "/stats: Победы/проигрыши по причинам выхода и средняя длительность удержания",
+        "/help: This help message": "/help: Это сообщение помощи",
+        "/version: Show version": "/version: Показать версию",
+    }
+}
+
+
 def safe_async_db(func: Callable[..., Any]):
     """
     Decorator to safely handle sessions when switching async context
@@ -152,8 +348,18 @@ class Telegram(RPCHandler):
 
         self._app: Application
         self._loop: asyncio.AbstractEventLoop
+        self._lang: str = self._config.get("telegram", {}).get("language", "en")
         self._init_keyboard()
         self._start_thread()
+
+    # Translation helper
+    def _tr(self, key: str, /, **fmt: Any) -> str:
+        langmap = TRANSLATIONS.get(self._lang, {})
+        template = langmap.get(key, key)
+        try:
+            return template.format(**fmt)
+        except Exception:
+            return template
 
     def _start_thread(self):
         """
@@ -403,10 +609,10 @@ class Telegram(RPCHandler):
         emoji = "\N{CHECK MARK}" if is_fill else "\N{LARGE BLUE CIRCLE}"
 
         terminology = {
-            "1_enter": "New Trade",
-            "1_entered": "New Trade filled",
-            "x_enter": "Increasing position",
-            "x_entered": "Position increase filled",
+            "1_enter": self._tr("New Trade"),
+            "1_entered": self._tr("New Trade filled"),
+            "x_enter": self._tr("Increasing position"),
+            "x_entered": self._tr("Position increase filled"),
         }
 
         key = f"{'x' if msg['sub_trade'] else '1'}_{'entered' if is_fill else 'enter'}"
@@ -415,25 +621,25 @@ class Telegram(RPCHandler):
         message = (
             f"{emoji} *{self._exchange_from_msg(msg)}:*"
             f" {wording} (#{msg['trade_id']})\n"
-            f"*Pair:* `{msg['pair']}`\n"
+            f"*{self._tr('Pair:')}* `{msg['pair']}`\n"
         )
         message += self._add_analyzed_candle(msg["pair"])
-        message += f"*Enter Tag:* `{msg['enter_tag']}`\n" if msg.get("enter_tag") else ""
-        message += f"*Amount:* `{round_value(msg['amount'], 8)}`\n"
-        message += f"*Direction:* `{msg['direction']}"
+        message += f"*{self._tr('Enter Tag:')}* `{msg['enter_tag']}`\n" if msg.get("enter_tag") else ""
+        message += f"*{self._tr('Amount:')}* `{round_value(msg['amount'], 8)}`\n"
+        message += f"*{self._tr('Direction:')}* `{msg['direction']}"
         if msg.get("leverage") and msg.get("leverage", 1.0) != 1.0:
             message += f" ({msg['leverage']:.3g}x)"
         message += "`\n"
-        message += f"*Open Rate:* `{fmt_coin2(msg['open_rate'], msg['quote_currency'])}`\n"
+        message += f"*{self._tr('Open Rate:')}* `{fmt_coin2(msg['open_rate'], msg['quote_currency'])}`\n"
         if msg["type"] == RPCMessageType.ENTRY and msg["current_rate"]:
             message += (
-                f"*Current Rate:* `{fmt_coin2(msg['current_rate'], msg['quote_currency'])}`\n"
+                f"*{self._tr('Current Rate:')}* `{fmt_coin2(msg['current_rate'], msg['quote_currency'])}`\n"
             )
 
         profit_fiat_extra = self.__format_profit_fiat(msg, "stake_amount")  # type: ignore
         total = fmt_coin(msg["stake_amount"], msg["quote_currency"])
 
-        message += f"*{'New ' if msg['sub_trade'] else ''}Total:* `{total}{profit_fiat_extra}`"
+        message += f"*{'New ' if msg['sub_trade'] else ''}{self._tr('Total:')}* `{total}{profit_fiat_extra}`"
 
         return message
 
@@ -462,54 +668,54 @@ class Telegram(RPCHandler):
         is_final_exit = msg.get("is_final_exit", False) and is_sub_profit
         profit_prefix = "Sub " if is_sub_trade else ""
         cp_extra = ""
-        exit_wording = "Exited" if is_fill else "Exiting"
+        exit_wording = self._tr("Exited") if is_fill else self._tr("Exiting")
         if is_sub_trade or is_final_exit:
             cp_fiat = self.__format_profit_fiat(msg, "cumulative_profit")
 
             if is_final_exit:
                 profit_prefix = "Sub "
                 cp_extra = (
-                    f"*Final Profit:* `{msg['final_profit_ratio']:.2%} "
+                    f"*{self._tr('Final Profit:')}* `{msg['final_profit_ratio']:.2%} "
                     f"({msg['cumulative_profit']:.8f} {msg['quote_currency']}{cp_fiat})`\n"
                 )
             else:
-                exit_wording = f"Partially {exit_wording.lower()}"
+                exit_wording = f"{self._tr('Partially exiting')}"
                 if msg["cumulative_profit"]:
                     cp_extra = (
-                        f"*Cumulative Profit:* `"
+                        f"*{self._tr('Cumulative Profit:')}* `"
                         f"{fmt_coin(msg['cumulative_profit'], msg['stake_currency'])}{cp_fiat}`\n"
                     )
-        enter_tag = f"*Enter Tag:* `{msg['enter_tag']}`\n" if msg.get("enter_tag") else ""
+        enter_tag = f"*{self._tr('Enter Tag:')}* `{msg['enter_tag']}`\n" if msg.get("enter_tag") else ""
         message = (
             f"{self._get_exit_emoji(msg)} *{self._exchange_from_msg(msg)}:* "
             f"{exit_wording} {msg['pair']} (#{msg['trade_id']})\n"
             f"{self._add_analyzed_candle(msg['pair'])}"
-            f"*{f'{profit_prefix}Profit' if is_fill else f'Unrealized {profit_prefix}Profit'}:* "
+            f"*{f'{profit_prefix}{self._tr('Profit')}' if is_fill else f'{self._tr('Unrealized ')}{profit_prefix}{self._tr('Profit')}'}:* "
             f"`{msg['profit_ratio']:.2%}{profit_extra}`\n"
             f"{cp_extra}"
             f"{enter_tag}"
-            f"*Exit Reason:* `{msg['exit_reason']}`\n"
-            f"*Direction:* `{msg['direction']}"
+            f"*{self._tr('Exit Reason')}:* `{msg['exit_reason']}`\n"
+            f"*{self._tr('Direction:')}* `{msg['direction']}"
             f"{leverage_text}`\n"
-            f"*Amount:* `{round_value(msg['amount'], 8)}`\n"
-            f"*Open Rate:* `{fmt_coin2(msg['open_rate'], msg['quote_currency'])}`\n"
+            f"*{self._tr('Amount:')}* `{round_value(msg['amount'], 8)}`\n"
+            f"*{self._tr('Open Rate:')}* `{fmt_coin2(msg['open_rate'], msg['quote_currency'])}`\n"
         )
         if msg["type"] == RPCMessageType.EXIT and msg["current_rate"]:
             message += (
-                f"*Current Rate:* `{fmt_coin2(msg['current_rate'], msg['quote_currency'])}`\n"
+                f"*{self._tr('Current Rate:')}* `{fmt_coin2(msg['current_rate'], msg['quote_currency'])}`\n"
             )
             if msg["order_rate"]:
-                message += f"*Exit Rate:* `{fmt_coin2(msg['order_rate'], msg['quote_currency'])}`"
+                message += f"*{self._tr('Exit Rate:')}* `{fmt_coin2(msg['order_rate'], msg['quote_currency'])}`"
         elif msg["type"] == RPCMessageType.EXIT_FILL:
-            message += f"*Exit Rate:* `{fmt_coin2(msg['close_rate'], msg['quote_currency'])}`"
+            message += f"*{self._tr('Exit Rate:')}* `{fmt_coin2(msg['close_rate'], msg['quote_currency'])}`"
 
         if is_sub_trade:
             stake_amount_fiat = self.__format_profit_fiat(msg, "stake_amount")
 
             rem = fmt_coin(msg["stake_amount"], msg["quote_currency"])
-            message += f"\n*Remaining:* `{rem}{stake_amount_fiat}`"
+            message += f"\n*{self._tr('Remaining:')}* `{rem}{stake_amount_fiat}`"
         else:
-            message += f"\n*Duration:* `{duration} ({duration_min:.1f} min)`"
+            message += f"\n*{self._tr('Duration:')}* `{duration} ({duration_min:.1f} {self._tr('min')})`"
         return message
 
     def __format_profit_fiat(
@@ -557,13 +763,13 @@ class Telegram(RPCHandler):
             )
 
         elif msg["type"] == RPCMessageType.STATUS:
-            message = f"*Status:* `{msg['status']}`"
+            message = f"*{self._tr('Status:')}* `{msg['status']}`"
 
         elif msg["type"] == RPCMessageType.WARNING:
-            message = f"\N{WARNING SIGN} *Warning:* `{msg['status']}`"
+            message = f"\N{WARNING SIGN} *{self._tr('Warning:')}* `{msg['status']}`"
         elif msg["type"] == RPCMessageType.EXCEPTION:
             # Errors will contain exceptions, which are wrapped in triple ticks.
-            message = f"\N{WARNING SIGN} *ERROR:* \n {msg['status']}"
+            message = f"\N{WARNING SIGN} *{self._tr('ERROR:')}* \n {msg['status']}"
 
         elif msg["type"] == RPCMessageType.STARTUP:
             message = f"{msg['status']}"
@@ -1205,9 +1411,17 @@ class Telegram(RPCHandler):
             [reason_map.get(reason, reason), sum(count.values()), count["wins"], count["losses"]]
             for reason, count in stats["exit_reasons"].items()
         ]
-        exit_reasons_msg = "No trades yet."
+        exit_reasons_msg = self._tr("No trades yet.")
         for reason in chunks(exit_reasons_tabulate, 25):
-            exit_reasons_msg = tabulate(reason, headers=["Exit Reason", "Exits", "Wins", "Losses"])
+            exit_reasons_msg = tabulate(
+                reason,
+                headers=[
+                    self._tr("Exit Reason"),
+                    self._tr("Exits"),
+                    self._tr("Wins"),
+                    self._tr("Losses"),
+                ],
+            )
             if len(exit_reasons_tabulate) > 25:
                 await self._send_msg(f"```\n{exit_reasons_msg}```", ParseMode.MARKDOWN)
                 exit_reasons_msg = ""
@@ -1220,19 +1434,19 @@ class Telegram(RPCHandler):
                     (
                         str(timedelta(seconds=durations["wins"]))
                         if durations["wins"] is not None
-                        else "N/A"
+                        else self._tr("N/A")
                     ),
                 ],
                 [
-                    "Losses",
+                    self._tr("Losses"),
                     (
                         str(timedelta(seconds=durations["losses"]))
                         if durations["losses"] is not None
-                        else "N/A"
+                        else self._tr("N/A")
                     ),
                 ],
             ],
-            headers=["", "Avg. Duration"],
+            headers=["", self._tr("Avg. Duration")],
         )
         msg = f"""```\n{exit_reasons_msg}```\n```\n{duration_msg}```"""
 
@@ -1252,9 +1466,9 @@ class Telegram(RPCHandler):
 
         output = ""
         if self._config["dry_run"]:
-            output += "*Warning:* Simulated balances in Dry Mode.\n"
+            output += f"*{self._tr('Warning:')}* {self._tr('Simulated balances in Dry Mode.')}\n"
         starting_cap = fmt_coin(result["starting_capital"], self._config["stake_currency"])
-        output += f"Starting capital: `{starting_cap}`"
+        output += f"{self._tr('Starting capital:')} `{starting_cap}`"
         starting_cap_fiat = (
             fmt_coin(result["starting_capital_fiat"], self._config["fiat_display_currency"])
             if result["starting_capital_fiat"] > 0
@@ -1320,7 +1534,7 @@ class Telegram(RPCHandler):
             f"\t`{result['symbol']}: {value}`{fiat_val}\n" if result["symbol"] else ""
         )
         output += (
-            f"\n*Estimated Value{' (Bot managed assets only)' if not full_result else ''}*:\n"
+            f"\n*{self._tr('Estimated Value')}{self._tr(' (Bot managed assets only)') if not full_result else ''}*:\n"
             f"\t`{result['stake']}: {total_stake}`{stake_improve}\n"
             f"{fiat_estimated_value}"
         )
@@ -1338,7 +1552,7 @@ class Telegram(RPCHandler):
         :return: None
         """
         msg = self._rpc._rpc_start()
-        await self._send_msg(f"Status: `{msg['status']}`")
+        await self._send_msg(f"{self._tr('Status:')} `{msg['status']}`")
 
     @authorized_only
     async def _stop(self, update: Update, context: CallbackContext) -> None:
@@ -1350,7 +1564,7 @@ class Telegram(RPCHandler):
         :return: None
         """
         msg = self._rpc._rpc_stop()
-        await self._send_msg(f"Status: `{msg['status']}`")
+        await self._send_msg(f"{self._tr('Status:')} `{msg['status']}`")
 
     @authorized_only
     async def _reload_config(self, update: Update, context: CallbackContext) -> None:
@@ -1362,7 +1576,7 @@ class Telegram(RPCHandler):
         :return: None
         """
         msg = self._rpc._rpc_reload_config()
-        await self._send_msg(f"Status: `{msg['status']}`")
+        await self._send_msg(f"{self._tr('Status:')} `{msg['status']}`")
 
     @authorized_only
     async def _pause(self, update: Update, context: CallbackContext) -> None:
@@ -1382,7 +1596,7 @@ class Telegram(RPCHandler):
         Handler for /reload_trade <tradeid>.
         """
         if not context.args or len(context.args) == 0:
-            raise RPCException("Trade-id not set.")
+            raise RPCException(self._tr("Trade-id not set."))
         trade_id = int(context.args[0])
         msg = self._rpc._rpc_reload_trade_from_exchange(trade_id)
         await self._send_msg(f"Status: `{msg['status']}`")
@@ -1407,7 +1621,7 @@ class Telegram(RPCHandler):
                     self._config["stake_currency"], fiat_currency
                 )
             except RPCException:
-                await self._send_msg(msg="No open trade found.")
+                await self._send_msg(msg=self._tr("No open trade found."))
                 return
             trades = []
             for trade in statlist:
@@ -1420,9 +1634,9 @@ class Telegram(RPCHandler):
             buttons_aligned = self._layout_inline_keyboard(trade_buttons, cols=1)
 
             buttons_aligned.append(
-                [InlineKeyboardButton(text="Cancel", callback_data="force_exit__cancel")]
+                [InlineKeyboardButton(text=self._tr("Cancel"), callback_data="force_exit__cancel")]
             )
-            await self._send_msg(msg="Which trade?", keyboard=buttons_aligned)
+            await self._send_msg(msg=self._tr("Which trade?"), keyboard=buttons_aligned)
 
     async def _force_exit_action(self, trade_id: str):
         if trade_id != "cancel":
@@ -1441,17 +1655,17 @@ class Telegram(RPCHandler):
                 trade_id = query.data.split("__")[1].split(" ")[0]
                 if trade_id == "cancel":
                     await query.answer()
-                    await query.edit_message_text(text="Force exit canceled.")
+                    await query.edit_message_text(text=self._tr("Force exit canceled."))
                     return
                 trade: Trade | None = Trade.get_trades(trade_filter=Trade.id == trade_id).first()
                 await query.answer()
                 if trade:
                     await query.edit_message_text(
-                        text=f"Manually exiting Trade #{trade_id}, {trade.pair}"
+                        text=self._tr("Manually exiting Trade #{trade_id}, {pair}", trade_id=trade_id, pair=trade.pair)
                     )
                     await self._force_exit_action(trade_id)
                 else:
-                    await query.edit_message_text(text=f"Trade {trade_id} not found.")
+                    await query.edit_message_text(text=self._tr("Trade {trade_id} not found.", trade_id=trade_id))
 
     async def _force_enter_action(self, pair, price: float | None, order_side: SignalDirection):
         if pair != "cancel":
@@ -1476,13 +1690,13 @@ class Telegram(RPCHandler):
                 payload = query.data.split("__")[1]
                 if payload == "cancel":
                     await query.answer()
-                    await query.edit_message_text(text="Force enter canceled.")
+                    await query.edit_message_text(text=self._tr("Force enter canceled."))
                     return
                 if payload and "_||_" in payload:
                     pair, side = payload.split("_||_")
                     order_side = SignalDirection(side)
                     await query.answer()
-                    await query.edit_message_text(text=f"Manually entering {order_side} for {pair}")
+                    await query.edit_message_text(text=self._tr("Manually entering {side} for {pair}", side=order_side, pair=pair))
                     await self._force_enter_action(pair, None, order_side)
 
     @staticmethod
@@ -1517,10 +1731,10 @@ class Telegram(RPCHandler):
             buttons_aligned = self._layout_inline_keyboard(pair_buttons)
 
             buttons_aligned.append(
-                [InlineKeyboardButton(text="Cancel", callback_data="force_enter__cancel")]
+                [InlineKeyboardButton(text=self._tr("Cancel"), callback_data="force_enter__cancel")]
             )
             await self._send_msg(
-                msg="Which pair?", keyboard=buttons_aligned, query=update.callback_query
+                msg=self._tr("Which pair?"), keyboard=buttons_aligned, query=update.callback_query
             )
 
     @authorized_only
@@ -1550,13 +1764,13 @@ class Telegram(RPCHandler):
                 for trade in trades["trades"]
             ],
             headers=[
-                "Close Date",
-                "Pair (ID L/S)" if nonspot else "Pair (ID)",
+                self._tr("Close Date"),
+                self._tr("Pair (ID L/S)") if nonspot else self._tr("Pair (ID)"),
                 f"Profit ({stake_cur})",
             ],
             tablefmt="simple",
         )
-        message = f"<b>{min(trades['trades_count'], nrecent)} recent trades</b>:\n" + (
+        message = f"<b>{min(trades['trades_count'], nrecent)} {self._tr('recent trades')}</b>:\n" + (
             f"<pre>{trades_tab}</pre>" if trades["trades_count"] > 0 else ""
         )
         await self._send_msg(message, parse_mode=ParseMode.HTML)
@@ -1571,12 +1785,12 @@ class Telegram(RPCHandler):
         :return: None
         """
         if not context.args or len(context.args) == 0:
-            raise RPCException("Trade-id not set.")
+            raise RPCException(self._tr("Trade-id not set."))
         trade_id = int(context.args[0])
         msg = self._rpc._rpc_delete(trade_id)
         await self._send_msg(
             f"{msg['result_msg']}\n"
-            "Please make sure to take care of this asset on the exchange manually."
+            f"{self._tr('Please make sure to take care of this asset on the exchange manually.')}"
         )
 
     @authorized_only
@@ -1589,10 +1803,10 @@ class Telegram(RPCHandler):
         :return: None
         """
         if not context.args or len(context.args) == 0:
-            raise RPCException("Trade-id not set.")
+            raise RPCException(self._tr("Trade-id not set."))
         trade_id = int(context.args[0])
         self._rpc._rpc_cancel_open_order(trade_id)
-        await self._send_msg("Open order canceled.")
+        await self._send_msg(self._tr("Open order canceled."))
 
     @authorized_only
     async def _performance(self, update: Update, context: CallbackContext) -> None:
@@ -1604,7 +1818,7 @@ class Telegram(RPCHandler):
         :return: None
         """
         trades = self._rpc._rpc_performance()
-        output = "<b>Performance:</b>\n"
+        output = f"<b>{self._tr('Performance:')}</b>\n"
         for i, trade in enumerate(trades):
             stat_line = (
                 f"{i + 1}.\t <code>{trade['pair']}\t"
@@ -1641,7 +1855,7 @@ class Telegram(RPCHandler):
             pair = context.args[0]
 
         trades = self._rpc._rpc_enter_tag_performance(pair)
-        output = "*Entry Tag Performance:*\n"
+        output = f"*{self._tr('Entry Tag Performance:')}*\n"
         for i, trade in enumerate(trades):
             stat_line = (
                 f"{i + 1}.\t `{trade['enter_tag']}\t"
@@ -1678,7 +1892,7 @@ class Telegram(RPCHandler):
             pair = context.args[0]
 
         trades = self._rpc._rpc_exit_reason_performance(pair)
-        output = "*Exit Reason Performance:*\n"
+        output = f"*{self._tr('Exit Reason Performance:')}*\n"
         for i, trade in enumerate(trades):
             stat_line = (
                 f"{i + 1}.\t `{trade['exit_reason']}\t"
@@ -1750,7 +1964,7 @@ class Telegram(RPCHandler):
         counts = self._rpc._rpc_count()
         message = tabulate(
             {k: [v] for k, v in counts.items()},
-            headers=["current", "max", "total stake"],
+            headers=[self._tr("current"), self._tr("max"), self._tr("total stake")],
             tablefmt="simple",
         )
         message = f"<pre>{message}</pre>"
@@ -1771,7 +1985,7 @@ class Telegram(RPCHandler):
         """
         rpc_locks = self._rpc._rpc_locks()
         if not rpc_locks["locks"]:
-            await self._send_msg("No active locks.", parse_mode=ParseMode.HTML)
+            await self._send_msg(self._tr("No active locks."), parse_mode=ParseMode.HTML)
 
         for locks in chunks(rpc_locks["locks"], 25):
             message = tabulate(
@@ -1779,7 +1993,7 @@ class Telegram(RPCHandler):
                     [lock["id"], lock["pair"], lock["lock_end_time"], lock["reason"]]
                     for lock in locks
                 ],
-                headers=["ID", "Pair", "Until", "Reason"],
+                headers=[self._tr("ID"), self._tr("Pair"), self._tr("Until"), self._tr("Reason")],
                 tablefmt="simple",
             )
             message = f"<pre>{escape(message)}</pre>"
@@ -1818,7 +2032,7 @@ class Telegram(RPCHandler):
             if "baseonly" in context.args:
                 whitelist["whitelist"] = [pair.split("/")[0] for pair in whitelist["whitelist"]]
 
-        message = f"Using whitelist `{whitelist['method']}` with {whitelist['length']} pairs\n"
+        message = f"{self._tr('Using whitelist')} `{whitelist['method']}` {self._tr('with {n} pairs', n=whitelist['length'])}\n"
         message += f"`{', '.join(whitelist['whitelist'])}`"
 
         logger.debug(message)
@@ -1835,11 +2049,11 @@ class Telegram(RPCHandler):
     async def send_blacklist_msg(self, blacklist: dict):
         errmsgs = []
         for _, error in blacklist["errors"].items():
-            errmsgs.append(f"Error: {error['error_msg']}")
+            errmsgs.append(f"{self._tr('Error:')} {error['error_msg']}")
         if errmsgs:
             await self._send_msg("\n".join(errmsgs))
 
-        message = f"Blacklist contains {blacklist['length']} pairs\n"
+        message = f"{self._tr('Blacklist contains {n} pairs', n=blacklist['length'])}\n"
         message += f"`{', '.join(blacklist['blacklist'])}`"
 
         logger.debug(message)
@@ -1894,80 +2108,62 @@ class Telegram(RPCHandler):
         :return: None
         """
         force_enter_text = (
-            "*/forcelong <pair> [<rate>]:* `Instantly buys the given pair. "
-            "Optionally takes a rate at which to buy "
-            "(only applies to limit orders).` \n"
+            f"*/forcelong <pair> [<rate>]:* `{self._tr('/forcelong <pair> [<rate>]: Instantly buys the given pair. Optionally takes a rate at which to buy (only applies to limit orders).')}` \n"
         )
         if self._rpc._freqtrade.trading_mode != TradingMode.SPOT:
             force_enter_text += (
-                "*/forceshort <pair> [<rate>]:* `Instantly shorts the given pair. "
-                "Optionally takes a rate at which to sell "
-                "(only applies to limit orders).` \n"
+                f"*/forceshort <pair> [<rate>]:* `{self._tr('/forceshort <pair> [<rate>]: Instantly shorts the given pair. Optionally takes a rate at which to sell (only applies to limit orders).')}` \n"
             )
         message = (
-            "_Bot Control_\n"
+            f"_{self._tr('Bot Control')}_\n"
             "------------\n"
-            "*/start:* `Starts the trader`\n"
-            "*/pause:* `Pause the new entries for trader, but handles open trades gracefully`\n"
-            "*/stop:* `Stops the trader`\n"
-            "*/stopentry:* `Stops entering, but handles open trades gracefully` \n"
-            "*/forceexit <trade_id>|all:* `Instantly exits the given trade or all trades, "
-            "regardless of profit`\n"
-            "*/fx <trade_id>|all:* `Alias to /forceexit`\n"
+            f"*/start:* `{self._tr('/start: Starts the trader')}`\n"
+            f"*/pause:* `{self._tr('/pause: Pause the new entries for trader, but handles open trades gracefully')}`\n"
+            f"*/stop:* `{self._tr('/stop: Stops the trader')}`\n"
+            f"*/stopentry:* `{self._tr('/stopentry: Stops entering, but handles open trades gracefully')}` \n"
+            f"*/forceexit <trade_id>|all:* `{self._tr('/forceexit <trade_id>|all: Instantly exits the given trade or all trades, regardless of profit')}`\n"
+            f"*/fx <trade_id>|all:* `{self._tr('/fx <trade_id>|all: Alias to /forceexit')}`\n"
             f"{force_enter_text if self._config.get('force_entry_enable', False) else ''}"
-            "*/delete <trade_id>:* `Instantly delete the given trade in the database`\n"
-            "*/reload_trade <trade_id>:* `Reload trade from exchange Orders`\n"
-            "*/cancel_open_order <trade_id>:* `Cancels open orders for trade. "
-            "Only valid when the trade has open orders.`\n"
-            "*/coo <trade_id>|all:* `Alias to /cancel_open_order`\n"
-            "*/whitelist [sorted] [baseonly]:* `Show current whitelist. Optionally in "
-            "order and/or only displaying the base currency of each pairing.`\n"
-            "*/blacklist [pair]:* `Show current blacklist, or adds one or more pairs "
-            "to the blacklist.` \n"
-            "*/blacklist_delete [pairs]| /bl_delete [pairs]:* "
-            "`Delete pair / pattern from blacklist. Will reset on reload_conf.` \n"
-            "*/reload_config:* `Reload configuration file` \n"
-            "*/unlock <pair|id>:* `Unlock this Pair (or this lock id if it's numeric)`\n"
-            "_Current state_\n"
+            f"*/delete <trade_id>:* `{self._tr('/delete <trade_id>: Instantly delete the given trade in the database')}`\n"
+            f"*/reload_trade <trade_id>:* `{self._tr('/reload_trade <trade_id>: Reload trade from exchange Orders')}`\n"
+            f"*/cancel_open_order <trade_id>:* `{self._tr('/cancel_open_order <trade_id>: Cancels open orders for trade. Only valid when the trade has open orders.')}`\n"
+            f"*/coo <trade_id>|all:* `{self._tr('/coo <trade_id>|all: Alias to /cancel_open_order')}`\n"
+            f"*/whitelist [sorted] [baseonly]:* `{self._tr('/whitelist [sorted] [baseonly]: Show current whitelist. Optionally in order and/or only displaying the base currency of each pairing.')}`\n"
+            f"*/blacklist [pair]:* `{self._tr('/blacklist [pair]: Show current blacklist, or adds one or more pairs to the blacklist.')}` \n"
+            f"*/blacklist_delete [pairs]| /bl_delete [pairs]:* "
+            f"`{self._tr('/blacklist_delete [pairs]| /bl_delete [pairs]: Delete pair / pattern from blacklist. Will reset on reload_conf.')}` \n"
+            f"*/reload_config:* `{self._tr('/reload_config: Reload configuration file')}` \n"
+            f"*/unlock <pair|id>:* `{self._tr("/unlock <pair|id>: Unlock this Pair (or this lock id if it's numeric)")}`\n"
+            f"_{self._tr('Current state')}_\n"
             "------------\n"
-            "*/show_config:* `Show running configuration` \n"
-            "*/locks:* `Show currently locked pairs`\n"
-            "*/balance:* `Show bot managed balance per currency`\n"
-            "*/balance total:* `Show account balance per currency`\n"
-            "*/logs [limit]:* `Show latest logs - defaults to 10` \n"
-            "*/count:* `Show number of active trades compared to allowed number of trades`\n"
-            "*/health* `Show latest process timestamp - defaults to 1970-01-01 00:00:00` \n"
-            "*/marketdir [long | short | even | none]:* `Updates the user managed variable "
-            "that represents the current market direction. If no direction is provided `"
-            "`the currently set market direction will be output.` \n"
-            "*/list_custom_data <trade_id> <key>:* `List custom_data for Trade ID & Key combo.`\n"
-            "`If no Key is supplied it will list all key-value pairs found for that Trade ID.`\n"
-            "_Statistics_\n"
+            f"*/show_config:* `{self._tr('/show_config: Show running configuration')}` \n"
+            f"*/locks:* `{self._tr('/locks: Show currently locked pairs')}`\n"
+            f"*/balance:* `{self._tr('/balance: Show bot managed balance per currency')}`\n"
+            f"*/balance total:* `{self._tr('/balance total: Show account balance per currency')}`\n"
+            f"*/logs [limit]:* `{self._tr('/logs [limit]: Show latest logs - defaults to 10')}` \n"
+            f"*/count:* `{self._tr('/count: Show number of active trades compared to allowed number of trades')}`\n"
+            f"*/health* `{self._tr('/health Show latest process timestamp - defaults to 1970-01-01 00:00:00')}` \n"
+            f"*/marketdir [long | short | even | none]:* `{self._tr('/marketdir [long | short | even | none]: Updates the user managed variable that represents the current market direction. If no direction is provided the currently set market direction will be output.')}` \n"
+            f"*/list_custom_data <trade_id> <key>:* `{self._tr('/list_custom_data <trade_id> <key>: List custom_data for Trade ID & Key combo. If no Key is supplied it will list all key-value pairs found for that Trade ID.')}`\n"
+            f"_{self._tr('Statistics')}_\n"
             "------------\n"
-            "*/status <trade_id>|[table]:* `Lists all open trades`\n"
-            "         *<trade_id> :* `Lists one or more specific trades.`\n"
-            "                        `Separate multiple <trade_id> with a blank space.`\n"
-            "         *table :* `will display trades in a table`\n"
-            "                `pending buy orders are marked with an asterisk (*)`\n"
-            "                `pending sell orders are marked with a double asterisk (**)`\n"
-            "*/entries <pair|none>:* `Shows the enter_tag performance`\n"
-            "*/exits <pair|none>:* `Shows the exit reason performance`\n"
-            "*/mix_tags <pair|none>:* `Shows combined entry tag + exit reason performance`\n"
-            "*/trades [limit]:* `Lists last closed trades (limited to 10 by default)`\n"
-            "*/profit [<n>]:* `Lists cumulative profit from all finished trades, "
-            "over the last n days`\n"
-            "*/profit_long [<n>]:* `Lists cumulative profit from all finished long trades, "
-            "over the last n days`\n"
-            "*/profit_short [<n>]:* `Lists cumulative profit from all finished short trades, "
-            "over the last n days`\n"
-            "*/performance:* `Show performance of each finished trade grouped by pair`\n"
-            "*/daily <n>:* `Shows profit or loss per day, over the last n days`\n"
-            "*/weekly <n>:* `Shows statistics per week, over the last n weeks`\n"
-            "*/monthly <n>:* `Shows statistics per month, over the last n months`\n"
-            "*/stats:* `Shows Wins / losses by Sell reason as well as "
-            "Avg. holding durations for buys and sells.`\n"
-            "*/help:* `This help message`\n"
-            "*/version:* `Show version`\n"
+            f"*/status <trade_id>|[table]:* `{self._tr('/status <trade_id>|[table]: Lists all open trades')}`\n"
+            "         *<trade_id> :* `" + self._tr("<trade_id> : Lists one or more specific trades.                        Separate multiple <trade_id> with a blank space.") + "`\n"
+            "         *table :* `" + self._tr("table : will display trades in a table                pending buy orders are marked with an asterisk (*)                pending sell orders are marked with a double asterisk (**)") + "`\n"
+            f"*/entries <pair|none>:* `{self._tr('/entries <pair|none>: Shows the enter_tag performance')}`\n"
+            f"*/exits <pair|none>:* `{self._tr('/exits <pair|none>: Shows the exit reason performance')}`\n"
+            f"*/mix_tags <pair|none>:* `{self._tr('/mix_tags <pair|none>: Shows combined entry tag + exit reason performance')}`\n"
+            f"*/trades [limit]:* `{self._tr('/trades [limit]: Lists last closed trades (limited to 10 by default)')}`\n"
+            f"*/profit [<n>]:* `{self._tr('/profit [<n>]: Lists cumulative profit from all finished trades, over the last n days')}`\n"
+            f"*/profit_long [<n>]:* `{self._tr('/profit_long [<n>]: Lists cumulative profit from all finished long trades, over the last n days')}`\n"
+            f"*/profit_short [<n>]:* `{self._tr('/profit_short [<n>]: Lists cumulative profit from all finished short trades, over the last n days')}`\n"
+            f"*/performance:* `{self._tr('/performance: Show performance of each finished trade grouped by pair')}`\n"
+            f"*/daily <n>:* `{self._tr('/daily <n>: Shows profit or loss per day, over the last n days')}`\n"
+            f"*/weekly <n>:* `{self._tr('/weekly <n>: Shows statistics per week, over the last n weeks')}`\n"
+            f"*/monthly <n>:* `{self._tr('/monthly <n>: Shows statistics per month, over the last n months')}`\n"
+            f"*/stats:* `{self._tr('/stats: Shows Wins / losses by Sell reason as well as Avg. holding durations for buys and sells.')}`\n"
+            f"*/help:* `{self._tr('/help: This help message')}`\n"
+            f"*/version:* `{self._tr('/version: Show version')}`\n"
         )
 
         await self._send_msg(message, parse_mode=ParseMode.MARKDOWN)
@@ -1979,9 +2175,9 @@ class Telegram(RPCHandler):
         Shows the last process timestamp
         """
         health = self._rpc.health()
-        message = f"Last process: `{health['last_process_loc']}`\n"
-        message += f"Initial bot start: `{health['bot_start_loc']}`\n"
-        message += f"Last bot restart: `{health['bot_startup_loc']}`"
+        message = f"{self._tr('Last process:')} `{health['last_process_loc']}`\n"
+        message += f"{self._tr('Initial bot start:')} `{health['bot_start_loc']}`\n"
+        message += f"{self._tr('Last bot restart:')} `{health['bot_startup_loc']}`"
         await self._send_msg(message)
 
     @authorized_only
@@ -1994,9 +2190,9 @@ class Telegram(RPCHandler):
         :return: None
         """
         strategy_version = self._rpc._freqtrade.strategy.version()
-        version_string = f"*Version:* `{__version__}`"
+        version_string = f"*{self._tr('Version:')}* `{__version__}`"
         if strategy_version is not None:
-            version_string += f"\n*Strategy version: * `{strategy_version}`"
+            version_string += f"\n*{self._tr('Strategy version:')} * `{strategy_version}`"
 
         await self._send_msg(version_string)
 
@@ -2013,10 +2209,10 @@ class Telegram(RPCHandler):
 
         if val["trailing_stop"]:
             sl_info = (
-                f"*Initial Stoploss:* `{val['stoploss']}`\n"
-                f"*Trailing stop positive:* `{val['trailing_stop_positive']}`\n"
-                f"*Trailing stop offset:* `{val['trailing_stop_positive_offset']}`\n"
-                f"*Only trail above offset:* `{val['trailing_only_offset_is_reached']}`\n"
+                f"*{self._tr('Initial Stoploss:')}* `{val['stoploss']}`\n"
+                f"*{self._tr('Trailing stop positive:')}* `{val['trailing_stop_positive']}`\n"
+                f"*{self._tr('Trailing stop offset:')}* `{val['trailing_stop_positive_offset']}`\n"
+                f"*{self._tr('Only trail above offset:')}* `{val['trailing_only_offset_is_reached']}`\n"
             )
 
         else:
@@ -2024,26 +2220,26 @@ class Telegram(RPCHandler):
 
         if val["position_adjustment_enable"]:
             pa_info = (
-                f"*Position adjustment:* On\n"
+                f"*{self._tr('Position adjustment:')}* {self._tr('On')}\n"
                 f"*Max enter position adjustment:* `{val['max_entry_position_adjustment']}`\n"
             )
         else:
-            pa_info = "*Position adjustment:* Off\n"
+            pa_info = f"*{self._tr('Position adjustment:')}* {self._tr('Off')}\n"
 
         await self._send_msg(
-            f"*Mode:* `{'Dry-run' if val['dry_run'] else 'Live'}`\n"
-            f"*Exchange:* `{val['exchange']}`\n"
-            f"*Market: * `{val['trading_mode']}`\n"
-            f"*Stake per trade:* `{val['stake_amount']} {val['stake_currency']}`\n"
-            f"*Max open Trades:* `{val['max_open_trades']}`\n"
-            f"*Minimum ROI:* `{val['minimal_roi']}`\n"
-            f"*Entry strategy:* ```\n{json.dumps(val['entry_pricing'])}```\n"
-            f"*Exit strategy:* ```\n{json.dumps(val['exit_pricing'])}```\n"
+            f"*{self._tr('Mode:')}* `{self._tr('Dry-run') if val['dry_run'] else self._tr('Live')}`\n"
+            f"*{self._tr('Exchange:')}* `{val['exchange']}`\n"
+            f"*{self._tr('Market:')} * `{val['trading_mode']}`\n"
+            f"*{self._tr('Stake per trade:')}* `{val['stake_amount']} {val['stake_currency']}`\n"
+            f"*{self._tr('Max open Trades:')}* `{val['max_open_trades']}`\n"
+            f"*{self._tr('Minimum ROI:')}* `{val['minimal_roi']}`\n"
+            f"*{self._tr('Entry strategy:')}* ```\n{json.dumps(val['entry_pricing'])}```\n"
+            f"*{self._tr('Exit strategy:')}* ```\n{json.dumps(val['exit_pricing'])}```\n"
             f"{sl_info}"
             f"{pa_info}"
-            f"*Timeframe:* `{val['timeframe']}`\n"
-            f"*Strategy:* `{val['strategy']}`\n"
-            f"*Current state:* `{val['state']}`"
+            f"*{self._tr('Timeframe:')}* `{val['timeframe']}`\n"
+            f"*{self._tr('Strategy:')}* `{val['strategy']}`\n"
+            f"*{self._tr('Current state:')}* `{val['state']}`"
         )
 
     @authorized_only
@@ -2103,12 +2299,12 @@ class Telegram(RPCHandler):
         if reload_able:
             reply_markup = InlineKeyboardMarkup(
                 [
-                    [InlineKeyboardButton("Refresh", callback_data=callback_path)],
+                    [InlineKeyboardButton(self._tr("Refresh"), callback_data=callback_path)],
                 ]
             )
         else:
             reply_markup = InlineKeyboardMarkup([[]])
-        msg += f"\nUpdated: {datetime.now().ctime()}"
+        msg += f"\n{self._tr('Updated:')} {datetime.now().ctime()}"
         if not query.message:
             return
 
@@ -2153,7 +2349,7 @@ class Telegram(RPCHandler):
             return
         if reload_able and self._config["telegram"].get("reload", True):
             reply_markup = InlineKeyboardMarkup(
-                [[InlineKeyboardButton("Refresh", callback_data=callback_path)]]
+                [[InlineKeyboardButton(self._tr("Refresh"), callback_data=callback_path)]]
             )
         else:
             if keyboard is not None:

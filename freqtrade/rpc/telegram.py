@@ -78,6 +78,10 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "No": "Нет",
         # Statuses
         "running": "работает",
+        "not running": "не запущен",
+        "Trader is not running": "Трейдер не запущен",
+        "trader is not running": "трейдер не запущен",
+        "paused": "приостановлен",
         "stopped": "остановлен",
         "starting trader ...": "Запуск трейдера ...",
         "stopping trader ...": "Остановка трейдера ...",
@@ -86,6 +90,10 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "Reloading config ...": "Перезагрузка конфигурации ...",
         "paused, no more entries will occur from now. Run /start to enable entries.": "приостановлен, новые входы не совершаются. Запустите /start для возобновления.",
         "Dry run is enabled": "Включён режим Dry Run",
+        "Process died": "Процесс завершился с ошибкой",
+        "process died": "процесс завершился с ошибкой",
+        "Starting worker": "Запуск рабочего процесса",
+        "Starting worker": "Запуск рабочего процесса",
         # Section headers
         "Bot Control": "Управление ботом",
         "Current state": "Текущее состояние",

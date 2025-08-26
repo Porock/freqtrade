@@ -55,6 +55,16 @@ from freqtrade.wallets import PositionWallet, Wallet
 logger = logging.getLogger(__name__)
 
 
+def _tr(message: str) -> str:
+    """
+    Translation function for RPC messages
+    """
+    translations = {
+        "no active trade": "нет активных сделок",
+    }
+    return translations.get(message, message)
+
+
 class RPCException(Exception):
     """
     Should be raised with a rpc-formatted message in an _rpc_* method
@@ -192,7 +202,7 @@ class RPC:
             trades = Trade.get_open_trades()
 
         if not trades:
-            raise RPCException("no active trade")
+            raise RPCException(_tr("no active trade"))
         else:
             results = []
             for trade in trades:
@@ -294,7 +304,7 @@ class RPC:
         """
         nonspot = self._config.get("trading_mode", TradingMode.SPOT) != TradingMode.SPOT
         if not Trade.get_open_trades():
-            raise RPCException("no active trade")
+            raise RPCException(_tr("no active trade"))
 
         trades_list = []
         fiat_profit_sum = nan

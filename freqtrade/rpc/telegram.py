@@ -83,16 +83,11 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "trader is not running": "трейдер не запущен",
         "paused": "приостановлен",
         "stopped": "остановлен",
-        "starting trader ...": "Запуск трейдера ...",
-        "stopping trader ...": "Остановка трейдера ...",
         "already running": "уже запущен",
         "already stopped": "уже остановлен",
         "Reloading config ...": "Перезагрузка конфигурации ...",
         "paused, no more entries will occur from now. Run /start to enable entries.": "приостановлен, новые входы не совершаются. Запустите /start для возобновления.",
         "Dry run is enabled": "Включён режим Dry Run",
-        "Process died": "Процесс завершился с ошибкой",
-        "process died": "процесс завершился с ошибкой",
-        "Starting worker": "Запуск рабочего процесса",
         "Starting worker": "Запуск рабочего процесса",
         # Section headers
         "Bot Control": "Управление ботом",
@@ -1167,11 +1162,11 @@ class Telegram(RPCHandler):
         """
 
         vals = {
-            "days": TimeunitMappings("Day", "Daily", "days", "update_daily", 7, "%Y-%m-%d"),
+            "days": TimeunitMappings("Day", self._tr("Daily"), self._tr("days"), "update_daily", 7, "%Y-%m-%d"),
             "weeks": TimeunitMappings(
-                "Monday", "Weekly", "weeks (starting from Monday)", "update_weekly", 8, "%Y-%m-%d"
+                "Monday", self._tr("Weekly"), self._tr("weeks (starting from Monday)"), "update_weekly", 8, "%Y-%m-%d"
             ),
-            "months": TimeunitMappings("Month", "Monthly", "months", "update_monthly", 6, "%Y-%m"),
+            "months": TimeunitMappings("Month", self._tr("Monthly"), self._tr("months"), "update_monthly", 6, "%Y-%m"),
         }
         val = vals[unit]
 
@@ -1287,9 +1282,9 @@ class Telegram(RPCHandler):
         # Direction-specific labels
         direction_label = f" {direction}" if direction else ""
         no_trades_msg = (
-            f"No{direction_label} trades yet.\n*Bot started:* `{stats['bot_start_date']}`"
+            f"{self._tr('No trades yet.')}{direction_label}\n*{self._tr('Bot started:')}* `{stats['bot_start_date']}`"
         )
-        no_closed_msg = f"`No closed{direction_label} trade` \n"
+        no_closed_msg = f"`{self._tr('No closed')}{direction_label} trade` \n"
         closed_roi_label = f"*ROI:* Closed{direction_label} trades"
         all_roi_label = f"*ROI:* All{direction_label} trades"
 
@@ -1321,7 +1316,7 @@ class Telegram(RPCHandler):
             f"({profit_all_percent} \N{GREEK CAPITAL LETTER SIGMA}%)`\n"
             f"{fiat_all_trades}"
             f"*Total Trade Count:* `{trade_count}`\n"
-            f"*Bot started:* `{stats['bot_start_date']}`\n"
+            f"*{self._tr('Bot started:')}* `{stats['bot_start_date']}`\n"
             f"*{'First Trade opened' if not timescale else 'Showing Profit since'}:* "
             f"`{first_trade_date}`\n"
             f"*Latest Trade opened:* `{latest_trade_date}`\n"

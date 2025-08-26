@@ -14,6 +14,16 @@ from freqtrade.rpc.rpc_types import RPCSendMsg
 logger = logging.getLogger(__name__)
 
 
+def _tr(message: str) -> str:
+    """
+    Translation function for RPC manager messages
+    """
+    translations = {
+        "Dry run is enabled. All trades are simulated.": "⚠️ Внимание: Dry run включен. Все сделки симулируются.",
+    }
+    return translations.get(message, message)
+
+
 class RPCManager:
     """
     Class to manage RPC objects (Telegram, API, ...)
@@ -104,7 +114,7 @@ class RPCManager:
             self.send_msg(
                 {
                     "type": RPCMessageType.WARNING,
-                    "status": "Dry run is enabled. All trades are simulated.",
+                    "status": _tr("Dry run is enabled. All trades are simulated."),
                 }
             )
         stake_currency = config["stake_currency"]

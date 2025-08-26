@@ -2126,64 +2126,64 @@ class Telegram(RPCHandler):
         :param update: message update
         :return: None
         """
-        force_enter_text = (
-            f"*/forcelong <pair> [<rate>]:* `{self._tr('/forcelong <pair> [<rate>]: Instantly buys the given pair. Optionally takes a rate at which to buy (only applies to limit orders).')}` \n"
+        lines = []
+        lines.append("_{}{}_".format(self._tr('Bot Control'), "\n"))
+        lines.append("------------\n")
+        lines.append("*/start:* `{}`\n".format(self._tr('/start: Starts the trader')))
+        lines.append("*/pause:* `{}`\n".format(self._tr('/pause: Pause the new entries for trader, but handles open trades gracefully')))
+        lines.append("*/stop:* `{}`\n".format(self._tr('/stop: Stops the trader')))
+        lines.append("*/stopentry:* `{}` \n".format(self._tr('/stopentry: Stops entering, but handles open trades gracefully')))
+        lines.append("*/forceexit <trade_id>|all:* `{}`\n".format(self._tr('/forceexit <trade_id>|all: Instantly exits the given trade or all trades, regardless of profit')))
+        lines.append("*/fx <trade_id>|all:* `{}`\n".format(self._tr('/fx <trade_id>|all: Alias to /forceexit')))
+        force_enter_text = "*/forcelong <pair> [<rate>]:* `{}` \n".format(
+            self._tr('/forcelong <pair> [<rate>]: Instantly buys the given pair. Optionally takes a rate at which to buy (only applies to limit orders).')
         )
         if self._rpc._freqtrade.trading_mode != TradingMode.SPOT:
-            force_enter_text += (
-                f"*/forceshort <pair> [<rate>]:* `{self._tr('/forceshort <pair> [<rate>]: Instantly shorts the given pair. Optionally takes a rate at which to sell (only applies to limit orders).')}` \n"
+            force_enter_text += "*/forceshort <pair> [<rate>]:* `{}` \n".format(
+                self._tr('/forceshort <pair> [<rate>]: Instantly shorts the given pair. Optionally takes a rate at which to sell (only applies to limit orders).')
             )
-        message = (
-            f"_{self._tr('Bot Control')}_\n"
-            "------------\n"
-            f"*/start:* `{self._tr('/start: Starts the trader')}`\n"
-            f"*/pause:* `{self._tr('/pause: Pause the new entries for trader, but handles open trades gracefully')}`\n"
-            f"*/stop:* `{self._tr('/stop: Stops the trader')}`\n"
-            f"*/stopentry:* `{self._tr('/stopentry: Stops entering, but handles open trades gracefully')}` \n"
-            f"*/forceexit <trade_id>|all:* `{self._tr('/forceexit <trade_id>|all: Instantly exits the given trade or all trades, regardless of profit')}`\n"
-            f"*/fx <trade_id>|all:* `{self._tr('/fx <trade_id>|all: Alias to /forceexit')}`\n"
-            f"{force_enter_text if self._config.get('force_entry_enable', False) else ''}"
-            f"*/delete <trade_id>:* `{self._tr('/delete <trade_id>: Instantly delete the given trade in the database')}`\n"
-            f"*/reload_trade <trade_id>:* `{self._tr('/reload_trade <trade_id>: Reload trade from exchange Orders')}`\n"
-            f"*/cancel_open_order <trade_id>:* `{self._tr('/cancel_open_order <trade_id>: Cancels open orders for trade. Only valid when the trade has open orders.')}`\n"
-            f"*/coo <trade_id>|all:* `{self._tr('/coo <trade_id>|all: Alias to /cancel_open_order')}`\n"
-            f"*/whitelist [sorted] [baseonly]:* `{self._tr('/whitelist [sorted] [baseonly]: Show current whitelist. Optionally in order and/or only displaying the base currency of each pairing.')}`\n"
-            f"*/blacklist [pair]:* `{self._tr('/blacklist [pair]: Show current blacklist, or adds one or more pairs to the blacklist.')}` \n"
-            f"*/blacklist_delete [pairs]| /bl_delete [pairs]:* "
-            f"`{self._tr('/blacklist_delete [pairs]| /bl_delete [pairs]: Delete pair / pattern from blacklist. Will reset on reload_conf.')}` \n"
-            f"*/reload_config:* `{self._tr('/reload_config: Reload configuration file')}` \n"
-            f"*/unlock <pair|id>:* `{self._tr('/unlock <pair|id>: Unlock this Pair (or this lock id if it\'s numeric)')}`\n"
-            f"_{self._tr('Current state')}_\n"
-            "------------\n"
-            f"*/show_config:* `{self._tr('/show_config: Show running configuration')}` \n"
-            f"*/locks:* `{self._tr('/locks: Show currently locked pairs')}`\n"
-            f"*/balance:* `{self._tr('/balance: Show bot managed balance per currency')}`\n"
-            f"*/balance total:* `{self._tr('/balance total: Show account balance per currency')}`\n"
-            f"*/logs [limit]:* `{self._tr('/logs [limit]: Show latest logs - defaults to 10')}` \n"
-            f"*/count:* `{self._tr('/count: Show number of active trades compared to allowed number of trades')}`\n"
-            f"*/health* `{self._tr('/health Show latest process timestamp - defaults to 1970-01-01 00:00:00')}` \n"
-            f"*/marketdir [long | short | even | none]:* `{self._tr('/marketdir [long | short | even | none]: Updates the user managed variable that represents the current market direction. If no direction is provided the currently set market direction will be output.')}` \n"
-            f"*/list_custom_data <trade_id> <key>:* `{self._tr('/list_custom_data <trade_id> <key>: List custom_data for Trade ID & Key combo. If no Key is supplied it will list all key-value pairs found for that Trade ID.')}`\n"
-            f"_{self._tr('Statistics')}_\n"
-            "------------\n"
-            f"*/status <trade_id>|[table]:* `{self._tr('/status <trade_id>|[table]: Lists all open trades')}`\n"
-            f"         *<trade_id> :* `{self._tr('<trade_id> : Lists one or more specific trades.                        Separate multiple <trade_id> with a blank space.')}`\n"
-            f"         *table :* `{self._tr('table : will display trades in a table                pending buy orders are marked with an asterisk (*)                pending sell orders are marked with a double asterisk (**)')}`\n"
-            f"*/entries <pair|none>:* `{self._tr('/entries <pair|none>: Shows the enter_tag performance')}`\n"
-            f"*/exits <pair|none>:* `{self._tr('/exits <pair|none>: Shows the exit reason performance')}`\n"
-            f"*/mix_tags <pair|none>:* `{self._tr('/mix_tags <pair|none>: Shows combined entry tag + exit reason performance')}`\n"
-            f"*/trades [limit]:* `{self._tr('/trades [limit]: Lists last closed trades (limited to 10 by default)')}`\n"
-            f"*/profit [<n>]:* `{self._tr('/profit [<n>]: Lists cumulative profit from all finished trades, over the last n days')}`\n"
-            f"*/profit_long [<n>]:* `{self._tr('/profit_long [<n>]: Lists cumulative profit from all finished long trades, over the last n days')}`\n"
-            f"*/profit_short [<n>]:* `{self._tr('/profit_short [<n>]: Lists cumulative profit from all finished short trades, over the last n days')}`\n"
-            f"*/performance:* `{self._tr('/performance: Show performance of each finished trade grouped by pair')}`\n"
-            f"*/daily <n>:* `{self._tr('/daily <n>: Shows profit or loss per day, over the last n days')}`\n"
-            f"*/weekly <n>:* `{self._tr('/weekly <n>: Shows statistics per week, over the last n weeks')}`\n"
-            f"*/monthly <n>:* `{self._tr('/monthly <n>: Shows statistics per month, over the last n months')}`\n"
-            f"*/stats:* `{self._tr('/stats: Shows Wins / losses by Sell reason as well as Avg. holding durations for buys and sells.')}`\n"
-            f"*/help:* `{self._tr('/help: This help message')}`\n"
-            f"*/version:* `{self._tr('/version: Show version')}`\n"
-        )
+        if self._config.get('force_entry_enable', False):
+            lines.append(force_enter_text)
+        lines.append("*/delete <trade_id>:* `{}`\n".format(self._tr('/delete <trade_id>: Instantly delete the given trade in the database')))
+        lines.append("*/reload_trade <trade_id>:* `{}`\n".format(self._tr('/reload_trade <trade_id>: Reload trade from exchange Orders')))
+        lines.append("*/cancel_open_order <trade_id>:* `{}`\n".format(self._tr('/cancel_open_order <trade_id>: Cancels open orders for trade. Only valid when the trade has open orders.')))
+        lines.append("*/coo <trade_id>|all:* `{}`\n".format(self._tr('/coo <trade_id>|all: Alias to /cancel_open_order')))
+        lines.append("*/whitelist [sorted] [baseonly]:* `{}`\n".format(self._tr('/whitelist [sorted] [baseonly]: Show current whitelist. Optionally in order and/or only displaying the base currency of each pairing.')))
+        lines.append("*/blacklist [pair]:* `{}` \n".format(self._tr('/blacklist [pair]: Show current blacklist, or adds one or more pairs to the blacklist.')))
+        lines.append("*/blacklist_delete [pairs]| /bl_delete [pairs]:* `{}` \n".format(self._tr('/blacklist_delete [pairs]| /bl_delete [pairs]: Delete pair / pattern from blacklist. Will reset on reload_conf.')))
+        lines.append("*/reload_config:* `{}` \n".format(self._tr('/reload_config: Reload configuration file')))
+        lines.append("*/unlock <pair|id>:* `{}`\n".format(self._tr('/unlock <pair|id>: Unlock this Pair (or this lock id if it\'s numeric)')))
+        lines.append("_{}{}_".format(self._tr('Current state'), "\n"))
+        lines.append("------------\n")
+        lines.append("*/show_config:* `{}` \n".format(self._tr('/show_config: Show running configuration')))
+        lines.append("*/locks:* `{}`\n".format(self._tr('/locks: Show currently locked pairs')))
+        lines.append("*/balance:* `{}`\n".format(self._tr('/balance: Show bot managed balance per currency')))
+        lines.append("*/balance total:* `{}`\n".format(self._tr('/balance total: Show account balance per currency')))
+        lines.append("*/logs [limit]:* `{}` \n".format(self._tr('/logs [limit]: Show latest logs - defaults to 10')))
+        lines.append("*/count:* `{}`\n".format(self._tr('/count: Show number of active trades compared to allowed number of trades')))
+        lines.append("*/health* `{}` \n".format(self._tr('/health Show latest process timestamp - defaults to 1970-01-01 00:00:00')))
+        lines.append("*/marketdir [long | short | even | none]:* `{}` \n".format(self._tr('/marketdir [long | short | even | none]: Updates the user managed variable that represents the current market direction. If no direction is provided the currently set market direction will be output.')))
+        lines.append("*/list_custom_data <trade_id> <key>:* `{}`\n".format(self._tr('/list_custom_data <trade_id> <key>: List custom_data for Trade ID & Key combo. If no Key is supplied it will list all key-value pairs found for that Trade ID.')))
+        lines.append("_{}{}_".format(self._tr('Statistics'), "\n"))
+        lines.append("------------\n")
+        lines.append("*/status <trade_id>|[table]:* `{}`\n".format(self._tr('/status <trade_id>|[table]: Lists all open trades')))
+        lines.append("         *<trade_id> :* `{}`\n".format(self._tr('<trade_id> : Lists one or more specific trades.                        Separate multiple <trade_id> with a blank space.')))
+        lines.append("         *table :* `{}`\n".format(self._tr('table : will display trades in a table                pending buy orders are marked with an asterisk (*)                pending sell orders are marked with a double asterisk (**)')))
+        lines.append("*/entries <pair|none>:* `{}`\n".format(self._tr('/entries <pair|none>: Shows the enter_tag performance')))
+        lines.append("*/exits <pair|none>:* `{}`\n".format(self._tr('/exits <pair|none>: Shows the exit reason performance')))
+        lines.append("*/mix_tags <pair|none>:* `{}`\n".format(self._tr('/mix_tags <pair|none>: Shows combined entry tag + exit reason performance')))
+        lines.append("*/trades [limit]:* `{}`\n".format(self._tr('/trades [limit]: Lists last closed trades (limited to 10 by default)')))
+        lines.append("*/profit [<n>]:* `{}`\n".format(self._tr('/profit [<n>]: Lists cumulative profit from all finished trades, over the last n days')))
+        lines.append("*/profit_long [<n>]:* `{}`\n".format(self._tr('/profit_long [<n>]: Lists cumulative profit from all finished long trades, over the last n days')))
+        lines.append("*/profit_short [<n>]:* `{}`\n".format(self._tr('/profit_short [<n>]: Lists cumulative profit from all finished short trades, over the last n days')))
+        lines.append("*/performance:* `{}`\n".format(self._tr('/performance: Show performance of each finished trade grouped by pair')))
+        lines.append("*/daily <n>:* `{}`\n".format(self._tr('/daily <n>: Shows profit or loss per day, over the last n days')))
+        lines.append("*/weekly <n>:* `{}`\n".format(self._tr('/weekly <n>: Shows statistics per week, over the last n weeks')))
+        lines.append("*/monthly <n>:* `{}`\n".format(self._tr('/monthly <n>: Shows statistics per month, over the last n months')))
+        lines.append("*/stats:* `{}`\n".format(self._tr('/stats: Shows Wins / losses by Sell reason as well as Avg. holding durations for buys and sells.')))
+        lines.append("*/help:* `{}`\n".format(self._tr('/help: This help message')))
+        lines.append("*/version:* `{}`\n".format(self._tr('/version: Show version')))
+        message = ''.join(lines)
 
         await self._send_msg(message, parse_mode=ParseMode.MARKDOWN)
 

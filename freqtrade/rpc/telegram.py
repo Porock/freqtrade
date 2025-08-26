@@ -76,6 +76,20 @@ TRANSLATIONS: dict[str, dict[str, str]] = {
         "N/A": "Н/Д",
         "Yes": "Да",
         "No": "Нет",
+        # Statuses
+        "running": "работает",
+        "stopped": "остановлен",
+        "starting trader ...": "Запуск трейдера ...",
+        "stopping trader ...": "Остановка трейдера ...",
+        "already running": "уже запущен",
+        "already stopped": "уже остановлен",
+        "Reloading config ...": "Перезагрузка конфигурации ...",
+        "paused, no more entries will occur from now. Run /start to enable entries.": "приостановлен, новые входы не совершаются. Запустите /start для возобновления.",
+        "Dry run is enabled": "Включён режим Dry Run",
+        # Section headers
+        "Bot Control": "Управление ботом",
+        "Current state": "Текущее состояние",
+        "Statistics": "Статистика",
         # Balance
         "Simulated balances in Dry Mode.": "Симулированные балансы в режиме Dry Run.",
         "Starting capital:": "Начальный капитал:",

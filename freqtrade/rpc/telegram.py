@@ -700,11 +700,16 @@ class Telegram(RPCHandler):
                         f"{fmt_coin(msg['cumulative_profit'], msg['stake_currency'])}{cp_fiat}`\n"
                     )
         enter_tag = f"*{self._tr('Enter Tag:')}* `{msg['enter_tag']}`\n" if msg.get("enter_tag") else ""
+        if is_fill:
+            profit_label = f"{profit_prefix}{self._tr('Profit')}"
+        else:
+            profit_label = f"{self._tr('Unrealized ')}{profit_prefix}{self._tr('Profit')}"
+
         message = (
             f"{self._get_exit_emoji(msg)} *{self._exchange_from_msg(msg)}:* "
             f"{exit_wording} {msg['pair']} (#{msg['trade_id']})\n"
             f"{self._add_analyzed_candle(msg['pair'])}"
-            f"*{f'{profit_prefix}{self._tr('Profit')}' if is_fill else f'{self._tr('Unrealized ')}{profit_prefix}{self._tr('Profit')}'}:* "
+            f"*{profit_label}:* "
             f"`{msg['profit_ratio']:.2%}{profit_extra}`\n"
             f"{cp_extra}"
             f"{enter_tag}"

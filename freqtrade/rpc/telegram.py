@@ -2147,7 +2147,7 @@ class Telegram(RPCHandler):
             f"*/blacklist_delete [pairs]| /bl_delete [pairs]:* "
             f"`{self._tr('/blacklist_delete [pairs]| /bl_delete [pairs]: Delete pair / pattern from blacklist. Will reset on reload_conf.')}` \n"
             f"*/reload_config:* `{self._tr('/reload_config: Reload configuration file')}` \n"
-            f"*/unlock <pair|id>:* `{self._tr("/unlock <pair|id>: Unlock this Pair (or this lock id if it's numeric)")}`\n"
+            f"*/unlock <pair|id>:* `{self._tr('/unlock <pair|id>: Unlock this Pair (or this lock id if it\'s numeric)')}`\n"
             f"_{self._tr('Current state')}_\n"
             "------------\n"
             f"*/show_config:* `{self._tr('/show_config: Show running configuration')}` \n"
